@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-from AzureConn import connect
 import json
 import threading
 import os
@@ -9,7 +8,6 @@ import os
 app = FastAPI()
 lock = threading.Lock()
 DATA_FILE = "appointment_service/appointments.json"
-conn = connect()
 
 
 origins = [
@@ -30,34 +28,14 @@ class Appointment(BaseModel):
     time: str
 
 def read_data():
-    '''if not os.path.exists(DATA_FILE):
+    if not os.path.exists(DATA_FILE):
         return []
     with open(DATA_FILE, 'r') as f:
-        return json.load(f)'''
-    # Connect to the PostgreSQL database and fetch appointments
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM appointments")
-    rows = cursor.fetchall()
-    appointments = []
-    for row in rows:
-        appointment = {
-            "patient": row[0],
-            "doctor": row[1],
-            "time": row[2]
-        }
-        appointments.append(appointment)
-    for appt in appointments:
-        print(appt)
-    
+        return json.load(f)
 
 def write_data(data):
-    '''with open(DATA_FILE, 'w') as f:
-        json.dump(data, f, indent=2)'''
-    cursor = conn.cursor()
-    for appt in data:
-        cursor.execute("INSERT INTO appointments (patient, doctor, time) VALUES (%s, %s, %s)", 
-                       (appt['patient'], appt['doctor'], appt['time']))
-
+    with open(DATA_FILE, 'w') as f:
+        json.dump(data, f, indent=2)
 
 @app.post("/book")
 def book(appt: Appointment):
