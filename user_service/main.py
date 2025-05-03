@@ -27,14 +27,35 @@ app.add_middleware(
 )
 
 def read_data():
+
+    # Can be removed if the database is working
+
     if not os.path.exists(DATA_FILE):
         return []
     with open(DATA_FILE, 'r') as f:
         return json.load(f)
 
+
 def write_data(data):
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=2)
+    '''cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users")
+    rows = cursor.fetchall()
+    users = []
+    for row in rows:
+        users.append(row)
+    return users'''
+    
+
+def write_data(data):
+    # Can be removed if the database is working
+    with open(DATA_FILE, 'w') as f:
+        json.dump(data, f, indent=2)
+    '''cursor = conn.cursor()
+    for user in data:
+        cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", 
+                       (user['username'], user['password']))'''
 
 @app.post("/register")
 def register(user: User):
