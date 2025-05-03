@@ -41,15 +41,20 @@ def write_data(data):
 def book(appt: Appointment):
     with lock:
         data = read_data()
+
+        # To normalize patient name: capitalize first letter (e.g., 'mira' → 'Mira')
+        appt.patient = appt.patient.strip().capitalize()
+
         if any(a['doctor'] == appt.doctor and a['time'] == appt.time for a in data):
             raise HTTPException(status_code=400, detail="Slot already booked")
         data.append(appt.dict())
         write_data(data)
     return {"msg": "Appointment booked"}
 
+
 @app.get("/appointments/{patient}")
 def get_appointments(patient: str):
     with lock:
         data = read_data()
-        user_appts = [a for a in data if a["patient"] == patient]
+        user_appts = [a for a in data if a["patient"].lower() == patient.lower()]
     return user_appts

@@ -1,4 +1,18 @@
 [
-    { "username": "user", "password": "123" },
-    { "username": "jane_doe", "password": "securepassword" }
+  {
+    "username": "user",
+    "password": "123"
+  },
+  {
+    "username": "jane_doe",
+    "password": "securepassword"
+  },
+  {
+    "username": "mira",
+    "password": "shop"
+  },
+  {
+    "username": "spike",
+    "password": "bellpeppers"
+  }
 ]
