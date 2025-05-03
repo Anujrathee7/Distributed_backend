@@ -1,0 +1,17 @@
+[
+  {
+    "patient": "john_doe",
+    "doctor": "Dr. Smith",
+    "time": "2025-05-01T10:00:00"
+  },
+  {
+    "patient": "jane_doe",
+    "doctor": "Dr. Johnson",
+    "time": "2025-05-02T14:00:00"
+  },
+  {
+    "patient": "Anuj",
+    "doctor": "Dr. Smith",
+    "time": "2025-05-15T02:00"
+  }
+]
