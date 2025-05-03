@@ -3,11 +3,13 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import json
 import os
-
+from AzureConn import connect
+import psycopg2
 
 
 app = FastAPI()
 DATA_FILE = "doctor_service/doctor.json"
+conn = connect()
 
 origins = [
     "http://localhost:5173",  # Your frontend's URL
@@ -26,11 +28,24 @@ class Doctor(BaseModel):
     specialty: str
 
 def read_data():
-    if not os.path.exists(DATA_FILE):
+    #Can be removed if the database is working
+    '''if not os.path.exists(DATA_FILE): 
         print("no data file")
         return []
     with open(DATA_FILE, 'r') as f:
-        return json.load(f)
+        return json.load(f)'''
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM doctors")
+    rows = cursor.fetchall()
+    doctors = []
+    for row in rows:
+        doctor = {
+            "name": row[0],
+            "specialty": row[1]
+        }
+        doctors.append(doctor)
+    for doc in doctors:
+        print(doc)
 
 @app.get("/doctors")
 def get_doctors():
