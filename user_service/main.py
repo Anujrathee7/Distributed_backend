@@ -27,26 +27,18 @@ app.add_middleware(
 )
 
 def read_data():
-<<<<<<< Updated upstream
-=======
+
     # Can be removed if the database is working
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
     if not os.path.exists(DATA_FILE):
         return []
     with open(DATA_FILE, 'r') as f:
         return json.load(f)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 
 def write_data(data):
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=2)
-=======
-=======
->>>>>>> Stashed changes
     '''cursor = conn.cursor()
     cursor.execute("SELECT * FROM users")
     rows = cursor.fetchall()
@@ -60,14 +52,10 @@ def write_data(data):
     # Can be removed if the database is working
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=2)
-    cursor = conn.cursor()
-    '''for user in data:
+    '''cursor = conn.cursor()
+    for user in data:
         cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", 
                        (user['username'], user['password']))'''
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
 @app.post("/register")
 def register(user: User):
