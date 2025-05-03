@@ -30,6 +30,7 @@ class Appointment(BaseModel):
     time: str
 
 def read_data():
+    # Can be removed if the database is working
     '''if not os.path.exists(DATA_FILE):
         return []
     with open(DATA_FILE, 'r') as f:
@@ -40,17 +41,12 @@ def read_data():
     rows = cursor.fetchall()
     appointments = []
     for row in rows:
-        appointment = {
-            "patient": row[0],
-            "doctor": row[1],
-            "time": row[2]
-        }
-        appointments.append(appointment)
-    for appt in appointments:
-        print(appt)
+        appointments.append(row)
+    return appointments
     
 
 def write_data(data):
+    # Can be removed if the database is working
     '''with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=2)'''
     cursor = conn.cursor()

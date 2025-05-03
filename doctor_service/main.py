@@ -39,13 +39,8 @@ def read_data():
     rows = cursor.fetchall()
     doctors = []
     for row in rows:
-        doctor = {
-            "name": row[0],
-            "specialty": row[1]
-        }
-        doctors.append(doctor)
-    for doc in doctors:
-        print(doc)
+        doctors.append(row)
+    return doctors
 
 @app.get("/doctors")
 def get_doctors():
