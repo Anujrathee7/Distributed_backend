@@ -1,26 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-import json
-import os
-from AzureConn import connect
+from doctor_service.AzureConn import connect
 import psycopg2
 
-
 app = FastAPI()
-DATA_FILE = "doctor_service/doctor.json"
-conn = connect()
 
 origins = [
-    "http://localhost:5173",  # Your frontend's URL
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allows the React frontend on localhost:5173 to make requests
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods (GET, POST, PUT, DELETE, etc.)
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 class Doctor(BaseModel):
@@ -28,19 +23,19 @@ class Doctor(BaseModel):
     specialty: str
 
 def read_data():
-    #Can be removed if the database is working
-    '''if not os.path.exists(DATA_FILE): 
-        print("no data file")
-        return []
-    with open(DATA_FILE, 'r') as f:
-        return json.load(f)'''
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM doctors")
-    rows = cursor.fetchall()
-    doctors = []
-    for row in rows:
-        doctors.append(row)
-    return doctors
+    conn = connect()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Database connection failed")
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT dname, speciality FROM doctors")
+        rows = cursor.fetchall()
+        return [{"name": row[0], "speciality": row[1]} for row in rows]
+    except Exception as e:
+        print("Error reading doctors:", e)
+        raise HTTPException(status_code=500, detail="Database query failed")
+    finally:
+        conn.close()
 
 @app.get("/doctors")
 def get_doctors():
